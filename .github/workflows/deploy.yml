@@ -1,4 +1,4 @@
-name: Deploy
+name: deploy
 
 on:
   workflow_dispatch:
@@ -20,7 +20,7 @@ jobs:
       contents: read   # read repo files
       id-token: write  # publish OCI image
     runs-on: ubuntu-latest
-    name: Deploy to ${{ github.event.inputs.env }}-gcp
+    name: deploy to ${{ github.event.inputs.env }}-gcp
     steps:
       - uses: styfle/cancel-workflow-action@0.9.1
       - uses: actions/checkout@v3
