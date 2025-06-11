@@ -1,0 +1,61 @@
+name: Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      env:
+        required: true
+        default: dev
+        type: choice
+        options:
+          - dev
+          - prod
+      aiven-secret:
+        description: Aiven secret to mount, e.g aiven-urskog-b15512a9-2025-24-0
+        required: true
+
+env:
+  IMAGE: ghcr.io/${{ github.repository }}:${{ github.sha }}
+  POOL: nav-${{ github.event.inputs.env }}
+  SECRET: ${{ github.event.inputs.aiven-secret }}
+
+jobs:
+  deploy:
+    permissions:
+      contents: read   # read repo files
+      id-token: write  # publish OCI image
+    runs-on: ubuntu-latest
+    name: Deploy to ${{ github.event.inputs.env }}-gcp
+    steps:
+      - uses: styfle/cancel-workflow-action@0.9.1
+      - uses: actions/checkout@v3
+
+      - uses: nais/docker-build-push@v0
+        with:
+          team: helved
+          identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
+          project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }}
+          image_suffix: ${{ github.workflow }}
+          tag: ${{ github.sha }}
+
+      - uses: nais/deploy/actions/deploy@v1
+        env:
+          RESOURCE: nais.yml
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          PRINT_PAYLOAD: true
+          CLUSTER: ${{ github.event.inputs.environment }}-gcp
+          VAR: pool=${{ env.POOL }},secret=${{ env.SECRET }}
+
+      - uses: nais/login@v0
+        id: login
+        with:
+          team: helved
+          identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
+          project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }}
+
+      - uses: nais/deploy/actions/deploy@v2
+        env:
+          PRINT_PAYLOAD: true
+          CLUSTER: ${{ github.event.inputs.env }}-gcp
+          RESOURCE: nais.yml
+          VAR: image=${{ steps.login.outputs.registry }}/${{ github.event.repository.name }}-${{ github.workflow }}:${{ github.sha }}

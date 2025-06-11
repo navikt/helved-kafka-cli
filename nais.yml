@@ -1,0 +1,27 @@
+apiVersion: nais.io/v1alpha1
+kind: Application
+metadata:
+  name: kafka-cli
+  namespace: helved
+  labels:
+    team: helved
+  annotations:
+    nais.io/read-only-file-system: "false"
+spec:
+  image: {{image}}
+  replicas:
+    min: 1
+    max: 1
+  kafka:
+    pool: {{pool}}
+    streams: true
+  resources:
+    limits:
+      cpu: 1000m
+      memory: 2048Mi
+    requests:
+      cpu: 1000m
+      memory: 2048Mi
+  filesFrom:
+    - secret: {{secret}}
+      mountPath: /var/run/secrets/other-app/kafka
