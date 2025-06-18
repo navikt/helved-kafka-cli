@@ -2,4 +2,4 @@
 
 set -xe 
 
-kafka-streams-application-reset.sh --bootstrap-server "$KAFKA_BROKERS" --config-file "$AIVEN_CONF" "$@"
+kafka-streams-application-reset.sh --config-file "$AIVEN_CONF" "$@"

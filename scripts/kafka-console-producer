@@ -2,4 +2,4 @@
 
 set -xe 
 
-kafka-console-producer.sh --bootstrap-server "$KAFKA_BROKERS" --command-config "$AIVEN_CONF" "$@"
+kafka-console-producer.sh --command-config "$AIVEN_CONF" "$@"

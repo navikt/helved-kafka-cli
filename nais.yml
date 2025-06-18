@@ -17,11 +17,11 @@ spec:
     streams: true
   resources:
     limits:
-      cpu: 1000m
-      memory: 2048Mi
+      cpu: 100m
+      memory: 256Mi
     requests:
-      cpu: 1000m
-      memory: 2048Mi
+      cpu: 100m
+      memory: 256Mi
   filesFrom:
     - secret: {{secret}}
       mountPath: /var/run/secrets/other-app/kafka
