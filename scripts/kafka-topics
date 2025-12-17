@@ -2,4 +2,4 @@
 
 set -xe 
 
-kafka-topics.sh --command-config "$AIVEN_CONF" "$@"
+kafka-topics.sh --bootstrap-server $KAFKA_BROKERS --command-config "$AIVEN_CONF" "$@"

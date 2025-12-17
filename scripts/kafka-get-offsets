@@ -2,4 +2,4 @@
 
 set -xe 
 
-kafka-get-offsets.sh --command-config "$AIVEN_CONF" "$@"
+kafka-get-offsets.sh --bootstrap-server $KAFKA_BROKERS --command-config "$AIVEN_CONF" "$@"
