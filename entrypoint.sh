@@ -19,6 +19,11 @@ ssl.keystore.password=$KAFKA_CREDSTORE_PASSWORD
 ssl.truststore.location=/var/run/secrets/other-app/kafka/client.truststore.jks
 ssl.truststore.password=$KAFKA_CREDSTORE_PASSWORD
 bootstrap.servers=$KAFKA_BROKERS
+
+ssl.protocol=TLS
+ssl.endpoint.identification.algorithm=
+ssl.key.password=$KAFKA_CREDSTORE_PASSWORD
+ssl.truststore.type=JKS
 EOF
 
 tail -f /dev/null
