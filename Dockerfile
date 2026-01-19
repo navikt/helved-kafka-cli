@@ -1,6 +1,6 @@
 FROM eclipse-temurin:21-alpine
 
-RUN apk update && apk upgrade && apk add bash curl jq vim
+RUN apk update && apk upgrade && apk add bash curl jq vim gcompat
 
 ENV KAFKA_URL=https://dlcdn.apache.org/kafka/4.1.1/kafka_2.13-4.1.1.tgz
 ENV KAFKA_DOWNLOAD=/download/kafka.tgz
@@ -17,6 +17,7 @@ WORKDIR ${KAFKA_WORKDIR}
 COPY entrypoint.sh /cli/
 COPY scripts /scripts
 
+RUN chmod +x /scripts/* /cli/entrypoint.sh
 RUN touch ${AIVEN_CONF}
 RUN chmod 777 ${AIVEN_CONF}
 

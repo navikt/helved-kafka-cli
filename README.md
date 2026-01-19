@@ -20,11 +20,34 @@ kubectl exec -i deploy/kafka-cli -- kafka-consumer-groups \
 kubectl exec -i deploy/kafka-cli -- kafka-consumer-groups --list
 ```
 
+### SHOW EARLIEST OFFSET
+```shell
+k exec -i deploy/kafka-cli -- kafka-get-offsets \
+--topic helved.utbetalinger.v1 --time -2
+```
+
+### SHOW LATEST OFFSET
+```shell
+k exec -i deploy/kafka-cli -- kafka-get-offsets \
+--topic ktable-helved.utbetalinger.v1-repartition --time -1
+```
+
+### consume topic
+```shell
+k exec -i deploy/kafka-cli -- kafka-console-consumer \
+--topic helved.abetal_stream_-ktable-helved.utbetalinger.v1-repartition \
+--from-beginning \
+--property print.key=true \
+--property print.partition=true \
+--property key.separator=" | " \
+--max-messages 500
+```
 ### Interactive shell commands
 Use scripts from /scripts to include brokers and aiven config, e.g:
 
+### List topics
 ```shell
-kubectl exec -i deploy/kafka-cli -- kafka-consumer-groups --list
+kubectl exec -i deploy/kafka-cli -- kafka-consumer-groups --list | grep "helved"
 ```
 
 ```shell
