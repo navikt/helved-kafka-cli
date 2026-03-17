@@ -7,12 +7,16 @@ ENV KAFKA_DOWNLOAD=/download/kafka.tgz
 ENV KAFKA_WORKDIR=/cli/kafka
 ENV PATH=${KAFKA_WORKDIR}/bin:${PATH}:/scripts
 ENV AIVEN_CONF=/cli/kafka/config/aiven.conf
+# Kafka 4.1.2 bundles versions of these libs that scanners flag.
+# Keep overrides centralized and remove this block once upstream fixes them.
 ENV KAFKA_JACKSON_CORE_VERSION=2.21.1
 ENV KAFKA_JETTY_VERSION=12.0.32
 
 RUN curl ${KAFKA_URL} --create-dirs -o ${KAFKA_DOWNLOAD}
 RUN mkdir -p ${KAFKA_WORKDIR}
 RUN tar -xvzpf ${KAFKA_DOWNLOAD} --strip-components=1 -C ${KAFKA_WORKDIR} && rm ${KAFKA_DOWNLOAD}
+# Replace vulnerable Kafka-bundled jars in-place.
+# Old jars are removed first to avoid duplicate versions on the classpath.
 RUN set -eux; \
     cd ${KAFKA_WORKDIR}/libs; \
     rm -f jackson-core-*.jar; \
