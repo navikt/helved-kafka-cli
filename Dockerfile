@@ -24,4 +24,4 @@ RUN chmod 777 ${AIVEN_CONF}
 
 USER 65532
 
-CMD ["/cli/entrypoint.sh"]
+ENTRYPOINT ["/cli/entrypoint.sh"]
